@@ -225,6 +225,423 @@ if (!empty($_REQUEST['name']))
 		
 ?>
 
+<p>10.Дан текстареа и кнопка. В текстареа вводится текст. По нажатию на кнопку выведите количество слов в тексте, количество символов в тексте, количество символов за вычетом пробелов.</p>
+
+<form action="" method="GET">
+		<textarea placeholder="Введите текст" name="text"></textarea><br><br>
+		<input type="submit" value = "Отправить">
+	</form>
+
+<?php
+	
+	$text = '';
+	
+	if (!empty($_REQUEST['text'])) {
+			$text = $_REQUEST['text'];
+			//Эта строка не работает с кирилицей
+			//echo 'Количество слов в тексте: '.str_word_count($text).'<br>';
+			echo 'Количество слов в тексте: '.count((explode(' ', $text))).'<br>';
+			echo 'Количество символов в тексте: '.mb_strlen($text).'<br>';
+			echo 'Количество символов за вычетом пробелов: '.strlen(strtr($text, [' ' => ''])).'<br>';
+		}	
+?>
+
+<p>11.Дан текстареа и кнопка. В текстареа вводится текст. По нажатию на кнопку нужно посчитать процентное содержание каждого символа в тексте.</p>
+
+<form action="" method="GET">
+		<textarea placeholder="Введите текст" name="text"></textarea><br><br>
+		<input type="submit" value = "Отправить">
+	</form>
+
+<?php
+	
+	//$text = 'hello world';
+	//Этот блок не работает, странно
+	/*if (!empty($_REQUEST['text'])) {
+			$text = $_REQUEST['text'];
+			$arr = array_count_values(count_chars($text));
+			var_dump($arr);
+			foreach ($arr as $key => $elem) {
+				echo 'Содержание символа: -'.chr(4).'- в этом тексте '.$key. ' %.'.'<br>';
+				}
+		}*/
+	/*if (!empty($_REQUEST['text'])) {
+		$text = $_REQUEST['text'];
+		$arr = str_split($text, 1);
+		var_dump($arr);
+		}*/
+	
+	if (!empty($_REQUEST['text'])) {
+		$text = mb_strtolower($_REQUEST['text']);
+		$len = mb_strlen($text);
+		}
+		
+	$arrnew = [];
+	for($i = 0; $i < mb_strlen($text); $i++) {
+		$arrnew[] = mb_substr($text, $i, 1);
+		}
+		
+	$arr =  array_count_values($arrnew);
+	
+	foreach ($arr as $key => $elem) {
+		echo $key .' - '. ($elem/$len)*100 . ' %'.'<br>';
+		}
+	
+?>
+
+<p>12. Дан массив слов, инпут и кнопка. В инпут вводится набор букв. По нажатию на кнопку выведите на экран те слова, которые содержат в себе все введенные буквы.</p>
+
+<form action="" method="GET">
+		<textarea placeholder="Введите текст" name="text"></textarea><br><br>
+		<input type="submit" value = "Отправить">
+	</form>
+
+<?php
+
+	//Функция преврающающая строку в массив и нормально работающая с кириллицей
+	function strToarr ($str) {
+		$arr = [];
+		for($i = 0; $i < mb_strlen($str); $i++) {
+		$arr[] = mb_substr($str, $i, 1);
+		}
+		return $arr;
+		}
+	
+	//Все это можно решить проще, но у меня не отображаются в браузере символы кирилицы
+	$word = ['привет','пока','пора', 'get'];
+
+	//Формирую из введенных букв массив
+	if (!empty($_REQUEST['text'])) {
+		//Делаю все символы маленькими
+		$arrlet = strToarr(mb_strtolower($_REQUEST['text']));
+		}
+
+	//Сравнивает элемент массива слов с введенными буквами и возвращает слово
+	foreach ($word as $elem) {
+
+		$arr3 = array_intersect(strToarr ($elem), $arrlet);
+		$arr4 = array_diff($arrlet, $arr3);
+		if (count($arr4) == 0) {
+			echo $elem.'<br>';
+			} 
+		
+		}
+	
+?>
+
+<p>13.Дан текстареа и кнопка. В текстареа через пробел вводятся слова. По нажатию на кнопку выведите слова в таком виде: сначала заголовок 'слова на букву а' и под ним все слова, которые начинаются на 'а', потом заголовок 'слова на букву б' и все слова на 'б' и так далее. Буквы должны идти в алфавитном порядке. Брать следует только те буквы, на которые начинаются наши слова. То есть: если нет слов, к примеру, на букву 'в' - такого заголовка тоже не будет.</p>
+
+<form action="" method="GET">
+		<textarea placeholder="Введите текст" name="text"></textarea><br><br>
+		<input type="submit" value = "Отправить">
+	</form>
+
+<?php
+
+	$alph = ['а','б','в','г','д','е','ж','з','и','й','к','л','м','н','о','п','р','с','т','у','ф','х','ц','ч','ш','щ','ъ','ы','ь','э','ю','я'];
+	
+	//Формирую из введенных слов массив
+	if (!empty($_REQUEST['text'])) {
+		$arrword = explode(' ', $_REQUEST['text']);
+		$i = 0;
+		foreach ($alph as $elem) {
+		$i = 0;
+		foreach ($arrword as $word) {
+			if ($i == 0 and mb_substr($word, 0, 1) == $elem) {
+				echo 'слова на букву '.$elem.'<br>'. $word .'<br>';
+				$i++;
+				}
+				else {
+					if ($i == 1 and mb_substr($word, 0, 1) == $elem) {
+					echo $word .'<br>';
+						}
+					}
+			}
+		}
+		}	
+?>
+
+<p>14.Дан инпут и кнопка. В этот инпут вводится строка на русском языке. По нажатию на кнопку выведите на экран транслит этой строки.</p>
+
+<form action="" method="GET">
+		<textarea placeholder="Введите текст" name="text"></textarea><br><br>
+		<input type="submit" value = "Отправить">
+	</form>
+
+<?php
+
+	function getTranslit($str) {
+	
+	return strtr(mb_strtolower($str), ['а' => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'д' => 'd', 'е' => 'e', 'ё' => 'e', 'ж' => 'zh', 'з' => 'z', 'и' => 'i', 'й' => 'y', 'к' => 'k', 'л' => 'l', 'м' => 'm', 'н' => 'n', 'о' => 'o', 'п' => 'p', 'р' => 'r', 'с' => 's', 'т' => 't', 'у' => 'u', 'ф' => 'f', 'х' => 'kh', 'ц' => 'ts', 'ч' => 'ch', 'ш' => 'sh', 'ъ' => '', 'ы' => 'y', 'ь' => '', 'э' => 'e', 'ю' => 'yu', 'я' => 'ya']);
+	}
+	
+	echo getTranslit($_REQUEST['text']);
+
+?>
+
+<p>Не решено, временный архив</p>
+
+<p>15.Дан инпут, 2 радиокнопочки и кнопка. В инпут вводится строка, а с помощью радиокнопочек выбирается - нужно преобразовать эту строку в транслит или из транслита обратно.</p>
+
+<form action="" method="GET">
+	<textarea placeholder="Введите текст" name="text"></textarea><br><br>
+	<p>Выберите нужную функцию</p>
+	<p>Транслит с русского на латинцу<input type="radio" name="trns" value="1"></p>
+	<p>Транслит с латинцы на русский<input type="radio" name="trns" value="2"></p>
+	<input type="submit">
+</form>
+
+	
+
+<?php
+	
+	var_dump($_REQUEST);
+	
+	function getTranslitRuEn($str) {
+	
+	return strtr(mb_strtolower($str), ['а' => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'д' => 'd', 'е' => 'e', 'ё' => 'e', 'ж' => 'zh', 'з' => 'z', 'и' => 'i', 'й' => 'y', 'к' => 'k', 'л' => 'l', 'м' => 'm', 'н' => 'n', 'о' => 'o', 'п' => 'p', 'р' => 'r', 'с' => 's', 'т' => 't', 'у' => 'u', 'ф' => 'f', 'х' => 'kh', 'ц' => 'ts', 'ч' => 'ch', 'ш' => 'sh', 'ъ' => '', 'ы' => 'y', 'ь' => '', 'э' => 'e', 'ю' => 'yu', 'я' => 'ya']);
+	}
+	
+	function getTranslitEnRu($str) {
+	
+	return strtr(mb_strtolower($str), ['a' => 'а', 'b' => 'б', 'ya' => 'я']);
+	}
+	
+	if ($_REQUEST['trns'] = 1) {
+	echo getTranslitRuEn($_REQUEST['text']);
+	}
+	
+	if ($_REQUEST['trns'] = 2) {
+	echo getTranslitEnRu('привет');
+	}
+	
+	
+	
+
+?>
+
+<p>15.Дан инпут, 2 радиокнопочки и кнопка. В инпут вводится строка, а с помощью радиокнопочек выбирается - нужно преобразовать эту строку в транслит или из транслита обратно.</p>
+
+<form action="" method="GET">
+	<textarea placeholder="Введите текст" name="text"></textarea><br><br>
+	<p>Выберите нужную функцию</p>
+	<p>Транслит с русского на латинцу<input type="radio" name="trns" value="1"></p>
+	<p>Транслит с латинцы на русский<input type="radio" name="trns" value="2" checked></p>
+	<input type="submit">
+</form>
+
+	
+
+<?php
+
+	//var_dump($_REQUEST);
+	
+	
+	//Функция обратной транслитерации упрощена. Если задача была в этом, дайте знать, переделаю.
+	
+	function getTranslitRuEn($str) {
+	
+	return strtr(mb_strtolower($str), 
+	['а' => 'a', 
+	'б' => 'b', 
+	'в' => 'v', 
+	'г' => 'g', 
+	'д' => 'd', 
+	'е' => 'e', 
+	'ё' => 'e', 
+	'ж' => 'zh', 
+	'з' => 'z', 
+	'и' => 'i', 
+	'й' => 'y', 
+	'к' => 'k', 
+	'л' => 'l', 
+	'м' => 'm', 
+	'н' => 'n', 
+	'о' => 'o', 
+	'п' => 'p', 
+	'р' => 'r', 
+	'с' => 's', 
+	'т' => 't', 
+	'у' => 'u', 
+	'ф' => 'f', 
+	'х' => 'kh', 
+	'ц' => 'ts', 
+	'ч' => 'ch', 
+	'ш' => 'sh', 
+	'ъ' => '', 
+	'ы' => 'y', 
+	'ь' => '', 
+	'э' => 'e', 
+	'ю' => 'yu', 
+	'я' => 'ya']);
+	}
+	
+	function getTranslitEnRu($str) {
+	
+	return strtr(mb_strtolower($str), 
+	['a' => 'а',
+	 'b' => 'б',
+	 'v' => 'в',
+	 'g' => 'г',
+	 'd' => 'д',
+	 'e' => 'е',
+	 'zh' => 'ж',
+	 'z' => 'з',
+	 'i' => 'и',
+	 'y' => 'й',
+	 'k' => 'к',
+	 'l' => 'л',
+	 'm' => 'м',
+	 'n' => 'н',
+	 'o' => 'о',
+	 'p' => 'п',
+	 'r' => 'р',
+	 's' => 'с',
+	 't' => 'т',
+	 'u' => 'у',
+	 'f' => 'ф',
+	 'kh' => 'х',
+	 'ts' => 'ц',
+	 'ch' => 'ч',
+	 'sh' => 'ш',
+	 'y' => 'ы',
+	 'e' => 'э', 
+	 'yu' => 'ю', 
+	 'ya' => 'я']);
+	}
+
+	if ($_REQUEST['trns'] == '1') {
+	echo getTranslitRuEn($_REQUEST['text']);
+	}
+	
+	if ($_REQUEST['trns'] == '2') {
+	echo getTranslitEnRu($_REQUEST['text']);
+	}
+	
+?>
+
+<p>16.Дан массив с вопросами и правильными ответами. Реализуйте тест: выведите на экран все вопросы, под каждым инпут. Пользователь читает вопрос, пишет свой ответ в инпут. Когда вопросы заканчиваются - он жмет на кнопку, страница обновляется и вместо инпутов под вопросами появляется сообщение вида: 'ваш ответ: ... верно!' или 'ваш ответ: ... неверно! Правильный ответ: ...'. Правильно отвеченные вопросы должны гореть зеленым цветом, а неправильно - красным.</p>
+
+<?php
+
+	//var_dump($_REQUEST);
+	//Массив вопросов и ответов
+	$arr = ['Количество часов в сутках?' => 24, 'Количество дней в неделе?' => 7,'Сколько будет 2*2?' => 4];
+	
+	//Переменная расчета номера вопроса и имени формы
+	$i = 0;
+	
+	//Если запрос не отправлен показываем страницу с тестом
+	if (empty($_REQUEST['submit'])) {
+	
+	echo '<form action="" method="GET">';	
+	foreach ($arr as $key => $elem) {
+		$i++;
+		echo $key.'<br>';	
+		echo '<textarea placeholder="Введите текст" name="text'.$i.'"></textarea><br><br>';
+		}
+	echo '<input type="submit" value = "Отправить" name="submit">';
+	echo '</form>';
+	
+	}
+	
+	$i = 0;
+	
+	if (isset($_REQUEST['text1']) and
+		isset($_REQUEST['text2']) and
+		isset($_REQUEST['text3']) and
+		isset($_REQUEST['submit'])) {
+			
+	echo '<br><br>Результаты теста<br><br>';
+	
+	echo '<form action="" method="GET">';
+		
+	foreach ($arr as $key => $elem) {
+		$i++;
+		echo $key.'<br>';
+		
+		if ($elem == $_REQUEST['text'.$i.'']) {
+			echo '<p style="background:green">Ваш ответ: '.$_REQUEST['text'.$i.''].' Верно!</p>';
+			}
+			else {
+				echo '<p style="background:red">Ваш ответ: '.$_REQUEST['text'.$i.''].' Неверно! Правильный ответ: '.$elem.'</p>';
+				}	
+		
+		}
+	
+	echo '</form>';
+	
+	}
+
+?>
+
+<p>17.Модифицируем предыдущую задачу: пусть теперь тест показывает варианты ответов и радиокнопочки. Пользователь должен выбрать один из вариантов.</p>
+
+<?php
+
+	//Функция, которая ищет в массиве элементы равные ключам.
+	//Можно сказать. правильные ответы на вопросы
+	function searchTrue ($arr) {
+		$str = '';
+		foreach ($arr as $key => $elem) {
+				if ($key == $elem) $str .= $elem.', ' ;	
+			}
+			
+		return trim($str, ', ');
+		}
+
+	//Массив вопросов и ответов
+	$arr = ['v1' => [22 => 0, 24 => 24], 'v2' => [6 => 0, 7 => 7], 'v3' => [1 => 0, 4 => 4]];
+	
+	//Пробовал использовать вопросы как value - не работает, ввел дополнительный массив 
+	$arrv = ['v1' => 'Количество часов в сутках?', 'v2' => 'Количество дней в неделе?', 'v3' =>  'Сколько будет 2*2?'];
+
+	//Если запрос не отправлен показываем страницу с тестом
+	if (empty($_REQUEST['submit'])) {
+		
+	echo '<form action="" method="GET">';
+		
+	foreach ($arr as $key => $elem) {
+		echo $arrv[$key].'<br>';
+		echo '<form action="" method="GET">';
+		foreach ($elem as $key2 => $subelem) {
+			
+			echo '<input type="radio" name="'.$key.'" value="'.$key2.'">'.$key2.'<br>';
+			
+			}
+		}
+	echo '<input type="submit" value = "Отправить" name="submit">';
+	echo '</form>';
+	
+	
+	}
+	
+	//Блок отображающий результаты теста
+	if (!empty($_REQUEST['submit'])) {	
+		echo '<br><br>Результаты теста<br><br>';
+		
+		foreach ($arr as $key => $elem) {
+		
+			echo $arrv[$key].'<br>';
+
+			foreach ($elem as $key2 => $subelem) {
+				if ($_REQUEST[''.$key.''] == $key2 and
+				$_REQUEST[''.$key.''] == $arr[$key][$_REQUEST[''.$key.'']]) {
+				echo '<p style="background:green">Ваш ответ:'.($_REQUEST[''.$key.'']).' Верно!</p>';
+				}
+					else {
+					if ($_REQUEST[''.$key.''] == $key2 and
+					$_REQUEST[''.$key.''] != $arr[$key][$_REQUEST[''.$key.'']]) {
+					echo '<p style="background:red">Ваш ответ: '.($_REQUEST[''.$key.'']).' Неверно! Правильный ответ: '.searchTrue($arr[$key]).'</p>';
+					}
+				}
+		
+			}
+		}
+	}
+?>
+
+
 
 
 
