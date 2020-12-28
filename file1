@@ -579,6 +579,9 @@ if (!empty($_REQUEST['name']))
 
 <?php
 
+	echo "<pre>";
+	print_r($_REQUEST);
+	echo "</pre>";
 	//Функция, которая ищет в массиве элементы равные ключам.
 	//Можно сказать. правильные ответы на вопросы
 	function searchTrue ($arr) {
@@ -625,14 +628,14 @@ if (!empty($_REQUEST['name']))
 			echo $arrv[$key].'<br>';
 
 			foreach ($elem as $key2 => $subelem) {
-				if ($_REQUEST[''.$key.''] == $key2 and
-				$_REQUEST[''.$key.''] == $arr[$key][$_REQUEST[''.$key.'']]) {
-				echo '<p style="background:green">Ваш ответ:'.($_REQUEST[''.$key.'']).' Верно!</p>';
+				if ($_REQUEST[$key] == $key2 and
+				$_REQUEST[$key] == $arr[$key][$_REQUEST[$key]]) {
+				echo '<p style="background:green">Ваш ответ:'.($_REQUEST[$key]).' Верно!</p>';
 				}
 					else {
-					if ($_REQUEST[''.$key.''] == $key2 and
-					$_REQUEST[''.$key.''] != $arr[$key][$_REQUEST[''.$key.'']]) {
-					echo '<p style="background:red">Ваш ответ: '.($_REQUEST[''.$key.'']).' Неверно! Правильный ответ: '.searchTrue($arr[$key]).'</p>';
+					if ($_REQUEST[$key] == $key2 and
+					$_REQUEST[$key] != $arr[$key][$_REQUEST[$key]]) {
+					echo '<p style="background:red">Ваш ответ: '.($_REQUEST[$key]).' Неверно! Правильный ответ: '.searchTrue($arr[$key]).'</p>';
 					}
 				}
 		
@@ -641,29 +644,75 @@ if (!empty($_REQUEST['name']))
 	}
 ?>
 
+<p>18.Модифицируем предыдущую задачу: пусть теперь на один вопрос может быть несколько правильных ответов. Пользователь должен отметить один или несколько чекбоксов.</p>
 
+<?php
 
+	//echo "<pre>";
+	//print_r($_REQUEST);
+	//echo "</pre>";
+	
+	//Функция, которая ищет в массиве элементы равные ключам.
+	//Можно сказать. правильные ответы на вопросы
+	function searchTrue ($arr) {
+		$str = '';
+		foreach ($arr as $key => $elem) {
+				if ($key == $elem) $str .= $elem.', ' ;	
+			}
+			
+		return trim($str, ', ');
+		}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	//Массив вопросов и ответов
+	$arr = ['v1' => [1 => 'z', 2 => 'z', 3 => 'z', 6 => 6, 7 => 7, 10 => 'z'], 'v2' => [1 => 'z', 7 => 7], 'v3' => [1 => 'z', 0 => 0, 2 => 2, 5 => 'z', 10 => 10]];
+	
+	//Пробовал использовать вопросы как value - не работает, ввел дополнительный массив 
+	$arrv = ['v1' => 'Выберите номера летних месяцев', 'v2' => 'Поставьте отметки на выходных днях', 'v3' =>  'Ометьте четные числа'];
+	
+	//Если запрос не отправлен показываем страницу с тестом
+	//Этот участок работает!!! 27 декабря 2020 года
+	if (empty($_REQUEST['submit'])) {
+		
+	echo '<form action="" method="GET">';
+		
+	foreach ($arr as $key => $elem) {
+		echo $arrv[$key].'<br>';
+		echo '<form action="" method="GET">';
+		foreach ($elem as $key2 => $subelem) {
+			echo '<input type="checkbox" name="'.$key.'[]" value="'.$key2.'">'.$key2.'<br>';
+			}
+		}
+	echo '<input type="submit" value = "Отправить" name="submit">';
+	echo '</form>';
+	
+	
+	}
+	
+	//Блок отображающий результаты теста
+	if (!empty($_REQUEST['submit'])) {	
+		echo '<br><br>Результаты теста<br><br>';
+		//Просматриваем массив вопросов и ответов
+		foreach ($arr as $key => $elem) {
+		//Выводим вопрос
+			echo $arrv[$key].'<br>';
+		//Сравниваем ответы из формы с данными массива
+			foreach ($_REQUEST[$key] as $elem2) {
+				
+				if (array_search($elem2, $arr[$key]) == $elem2)  {
+				//if (1 == 1)  {
+				echo '<p style="background:green">Ваш ответ:'.$elem2.' Верно!</p>';
+				//echo array_search($elem2, $arr[$key]);
+				}
+				else {
+					if (array_search($elem2, $arr[$key]) != $elem2) {
+					echo '<p style="background:red">Ваш ответ: '.$elem2.' Неверно! Правильный ответ: '.searchTrue($arr[$key]).'</p>';
+					}
+				
+				}
+			}
+		}
+	}
+?>
 
 
 
