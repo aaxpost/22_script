@@ -714,6 +714,309 @@ if (!empty($_REQUEST['name']))
 	}
 ?>
 
+<p>19.Напишите скрипт, который будет считать факториал числа. Само число вводится в инпут и после нажатия на кнопку пользователь должен увидеть результат.</p>
+
+<form action="" method="GET">
+	<input type="text" name="num">
+	<input type="submit">
+</form>
+
+<?php
+
+	//echo "<pre>";
+	//print_r($_REQUEST);
+	//echo "</pre>";
+	
+	$num = $_REQUEST['num'];
+	$result = 1;
+	
+	for ($i = 1; $i <= $num; $i++) {
+		$result =  $result*$i;
+		}
+		
+	if (isset($_REQUEST['num'])) echo $result;
+	
+?>
+
+<p>20.Напишите скрипт, который будет находить корни квадратного уравнения. Для этого сделайте 3 инпута, в которые будут вводиться коэффициенты уравнения.</p>
+
+<form action="" method="GET">
+	<input type="text" placeholder = "коэффициент a" name="a"><br><br>
+	<input type="text" placeholder = "коэффициент b" name="b"><br><br>
+	<input type="text" placeholder = "коэффициент c" name="c"><br><br>
+	<input type="submit" name ="submit">
+</form>
+
+<?php
+
+	//echo "<pre>";
+	//print_r($_REQUEST);
+	//echo "</pre>";
+	
+	$d = 0;
+	$x1 = 0;
+	$x2 = 0;
+	
+	if (!empty($_REQUEST['submit'])) {
+		//Находим дискриминанту
+		$a = $_REQUEST['a'];
+		$b = $_REQUEST['b'];
+		$c = $_REQUEST['c'];
+		$d = pow($b, 2) - 4*$a*$c;
+		//Находим дискриминанту
+		echo 'Дискриминанта равна: '.$d.'<br>';
+		
+		if ($d < 0) echo 'У этого уровнения нет корней';
+		if ($d == 0) {
+			echo 'У этого уровнения есть ровно один корень.'.'<br>';
+			echo 'x1 = '.(- $b + sqrt($d)) / 2 * $a;
+			}
+		if ($d > 0) {
+			echo 'У этого уровнения есть ровно два корня.'.'<br>';
+			echo 'x1 = '.(- $b + sqrt($d)) / 2 * $a.'<br>';
+			echo 'x2 = '.(- $b - sqrt($d)) / 2 * $a.'<br>';
+			}
+		}
+		
+?>
+
+<p>21.Даны 3 инпута. В них вводятся числа. Проверьте, что эти числа являются тройкой Пифагора: квадрат самого большого числа должен быть равен сумме квадратов двух остальных.</p>
+
+<form action="" method="GET">
+	<input type="text" placeholder = "Первое число" name="arr[]"><br><br>
+	<input type="text" placeholder = "Второе число" name="arr[]"><br><br>
+	<input type="text" placeholder = "Третье число" name="arr[]"><br><br>
+	<input type="submit" name ="submit">
+</form>
+
+<?php
+
+	echo "<pre>";
+	print_r($_REQUEST);
+	echo "</pre>";
+	
+	$d = 0;
+	$x1 = 0;
+	$x2 = 0;
+	
+	if (!empty($_REQUEST['submit'])) {
+		
+		$a = $_REQUEST['arr']['0'];
+		$b = $_REQUEST['arr']['1'];
+		$c = $_REQUEST['arr']['2'];
+		
+		if ($a > $b and $a > $c and $a*$a == $b*$b + $c*$c) {
+				echo 'Введенные числа являются тройкой пифагора.';
+				}
+				else {
+				if ($b > $a and $b > $c and $b*$b == $a*$a + $c*$c) {
+					 echo 'Введенные числа являются тройкой пифагора.';
+					}
+				}
+					if ($c > $a and $c > $b and $c*$c == $b*$b + $a*$a) {
+							echo 'Введенные числа являются тройкой пифагора.';
+						}	
+						else {
+							echo 'Введенные числа не являются тройкой пифагора!';
+							}
+		}
+		
+?>
+
+<p>22.Дан инпут и кнопка. В инпут вводится число. По нажатию на кнопку выведите список делителей этого числа.</p>
+
+<form action="" method="GET">
+	<input type="text" placeholder = "Введите число" name="num"><br><br>
+	<input type="submit" name ="submit">
+</form>
+
+<?php
+
+	//echo "<pre>";
+	//print_r($_REQUEST);
+	//echo "</pre>";
+	
+	$num = 0;
+	$str = '';
+	
+	if (!empty($_REQUEST['num'])) {
+		$num = $_REQUEST['num'];
+		$arr = range(1, $_REQUEST['num']);
+		
+		foreach ($arr as $elem) {
+			if ($num % $elem == 0)
+				$str .= $elem.',';
+			}
+		}
+	echo trim($str, ',');
+		
+?>
+
+<p>23.Дан инпут и кнопка. В инпут вводится число. По нажатию на кнопку разложите число на простые множители.</p>
+
+<form action="" method="GET">
+	<input type="text" placeholder = "Введите число" name="num"><br><br>
+	<input type="submit" name ="submit">
+</form>
+
+<?php
+
+	//echo "<pre>";
+	//print_r($_REQUEST);
+	//echo "</pre>";
+	
+	$div = $_REQUEST['num'];
+	$arr = range(2, $div, 1);
+	
+	//var_dump($arr);
+
+	divide($div, $str);
+	$str = '';
+	echo $str;
+
+	function divide($num, $str) {
+		//echo $num.', '.'<br>';
+		if($num > 1){
+		$arr = range(2, $num, 1);
+		foreach ($arr as $elem) {
+			if ($num % $elem == 0) {
+				$str .= $elem.'*';
+				$n = $elem;
+				break;
+				}
+			}
+			$num = $num / $n;
+			divide($num, $str);
+			
+		}
+		else {
+			echo trim($str, '*');
+			}	
+	}
+	
+?>
+
+<p>24.Даны 2 инпута и кнопка. В инпуты вводятся числа. По нажатию на кнопку выведите список общих делителей этих двух чисел.</p>
+
+<form action="" method="GET">
+	<input type="text" placeholder = "Введите число" name="num1"><br><br>
+	<input type="text" placeholder = "Введите число" name="num2"><br><br>
+	<input type="submit" name ="submit">
+</form>
+
+<?php
+
+	//Функция возвращающая массив делителей числа
+	function divider($num) {
+		$arr = range(1, $num);
+			foreach ($arr as $elem) {
+				if ($num % $elem == 0)
+				$arrdiv[] = $elem;
+			}
+		return $arrdiv;
+		}
+	
+	if(isset($_REQUEST['submit'])) {
+		$arrresult = array_intersect(divider($_REQUEST['num1']), divider($_REQUEST['num2']));
+		foreach ($arrresult as $elem) {
+			$str .= $elem.', ';
+			}
+		echo 'Введенные числа имеют такие общие делители:'.'<br>'.trim($str, ', ');
+	}
+	
+?>
+
+<p>25.Даны 2 инпута и кнопка. В инпуты вводятся числа. По нажатию на кнопку выведите наибольший общий делитель этих двух чисел.</p>
+
+<form action="" method="GET">
+	<input type="text" placeholder = "Введите число" name="num1"><br><br>
+	<input type="text" placeholder = "Введите число" name="num2"><br><br>
+	<input type="submit" name ="submit">
+</form>
+
+<?php
+
+	//Функция возвращающая массив делителей числа
+	function divider($num) {
+		$arr = range(1, $num);
+			foreach ($arr as $elem) {
+				if ($num % $elem == 0)
+				$arrdiv[] = $elem;
+			}
+		return $arrdiv;
+		}
+	
+	if(isset($_REQUEST['submit'])) {
+		$result = array_pop(array_intersect(divider($_REQUEST['num1']), divider($_REQUEST['num2'])));
+		
+		echo 'Наибольший общий делитель этих чисел: '.$result;
+	}
+	
+?>
+
+<p>26.Даны 2 инпута и кнопка. В инпуты вводятся числа. По нажатию на кнопку выведите наименьшее число, которое делится и на одно, и на второе из введенных чисел.</p>
+
+<form action="" method="GET">
+	<input type="text" placeholder = "Введите число" name="num1"><br><br>
+	<input type="text" placeholder = "Введите число" name="num2"><br><br>
+	<input type="submit" name ="submit">
+</form>
+
+<?php
+
+	$num1 = $_REQUEST['num1'];
+	$num2 = $_REQUEST['num2'];
+	
+	$i = 1;
+	
+	if(isset($_REQUEST['submit'])) {
+		while($i > 0) {
+			if ($i % $num1 == 0  and $i % $num2 == 0) break;
+			$i++;
+			}
+		echo 'Наименьшее число, которое делится на эти числа: '.$i;
+	}
+	
+?>
+
+<p>27.Даны 3 селекта и кнопка. Первый селект - это дни от 1 до 31, второй селект - это месяцы от января до декабря, а третий - это годы от 1990 до 2025. С помощью этих селектов можно выбрать дату. По нажатию на кнопку выведите на экран день недели, соответствующий этой дате, например, 'воскресенье'.</p>
+
+<form action="" method="GET">
+	<select name = "day">
+	<?php
+	foreach (range(1, 31, 1) as $elem) {
+		echo '<option>'.$elem.'</option>';
+		}
+	?>
+	</select>
+	
+	<select name = "month">
+	<?php
+	foreach (range(1, 12, 1) as $elem) {
+		echo '<option>'.$elem.'</option>';
+		}
+	?>   	
+	</select>
+	
+	<select name = "year">
+	<?php
+	foreach (range(1990, 2025, 1) as $elem) {
+		echo '<option>'.$elem.'</option>';
+		}
+	?>   	
+	</select>
+	<input type="submit" name ="submit">
+</form>
+
+<?php
+
+	$arr = ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'];
+	if (isset($_REQUEST['submit'])) {
+		echo $arr[date('w', strtotime($_REQUEST['day'].'-'.$_REQUEST['month'].'-'.$_REQUEST['year']))];
+	}
+	
+?>
+
 
 
 
